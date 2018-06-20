@@ -26,7 +26,7 @@ class searchController extends Controller
     {   
         if($request->input('action') != "search")
         {
-            session()->forget(['first_name','sur_name','email_work','position','country','event_name','event_date','nature_of_business','mobile_number']);
+            // session()->forget(['first_name','sur_name','email_work','position','position','country','event_name','event_id','event_date','company','nature_of_business','mobile_number']);
 
         }
         $first_name = $request->input('first_name');
@@ -34,20 +34,25 @@ class searchController extends Controller
         $email_work = $request->input('email_work');
         $country = $request->input('country');
         $position = $request->input('position');
+        $position1 = $request->input('position1');
         $event_id = $request->input('event_id');
         $event_name = $request->input('event_name');
         $nature_of_business = $request->input('nature_of_business');
         $mobile_number = $request->input('mobile_number');
         $event_date = $request->input('event_date');
+        $company = $request->input('company');
         // set session variables 
-        session(['mobile_number'=>$mobile_number,'event_data'=>$event_date,'country'=>$country,'position'=>$position,'event_name'=>$event_name,'nature_of_business'=>$nature_of_business,'first_name'=>$first_name,'sur_name'=>$sur_name,'email_work'=>$email_work]);
+        session(['mobile_number'=>$mobile_number,'event_data'=>$event_date,'country'=>$country,'position'=>$position,'position1'=>$position1,'event_name'=>$event_name,'event_id'=>$event_id,'company'=>$company,'nature_of_business'=>$nature_of_business,'first_name'=>$first_name,'sur_name'=>$sur_name,'email_work'=>$email_work]);
            
             $record = DB::table('exceldatas');
             $countrylist =DB::table('exceldatas')->distinct()->get(['country']);
             $positionlist = DB::table('exceldatas')->distinct()->get(['position']);
             $eventlist = DB::table('exceldatas')->distinct()->get(['event_name']);
             $nature_of_business_list = DB::table('exceldatas')->distinct()->get(['nature_of_business']);
-
+            $company_list = DB::table('exceldatas')->distinct()->get(['company']);
+            $event_id_list = DB::table('exceldatas')->distinct()->get(['event_id']);
+            $event_date_list = DB::table('exceldatas')->distinct()->get(['event_date']);
+            
             if ($request->has('first_name')){
                 $record->where('first_name', $first_name);
             }
@@ -55,13 +60,19 @@ class searchController extends Controller
                $record->where('sur_name', $sur_name);
             }
             if ($request->has('email_work')) {
-                $record->where('email_work', $email_work);
+                $record->where('email_work', 'like', '%' . $email_work.'%');
             }
             if ($request->has('country')) {
                 $record->where('country', $country);
             }
             if ($request->has('event_name')) {
                 $record->where('event_name', $event_name);
+            }
+            if ($request->has('event_id')) {
+                $record->where('event_id', $event_id);
+            }
+            if ($request->has('company')) {
+                $record->where('company', 'like', '%' .$company.'%');
             }
             if ($request->has('nature_of_business')) {
                 $record->where('nature_of_business', $nature_of_business);
@@ -73,10 +84,16 @@ class searchController extends Controller
                 $record->where('event_date', $event_date);
             }
             if ($request->has('position')) {
-                $record->where('position', $position);
+                $record->where('position', 'like', '%' .$position .'%');
             }
+            if ($request->has('position1')) {
+                $record->where('position', $position1);
+            }
+            
             $record =$record->paginate(15);
-            return view('showresult', compact('record','countrylist','positionlist','eventlist','nature_of_business_list'));
+            // var_dump(json_encode($record));
+            // exit();
+            return view('showresult', compact('record','countrylist','positionlist','eventlist','nature_of_business_list','company_list','event_id_list','event_date_list'));
 
     }
 
@@ -84,7 +101,7 @@ class searchController extends Controller
     {
 
       
-        session()->forget(['first_name','sur_name','email_work','position','country','event_name','event_date','nature_of_business','mobile_number']);
+        session()->forget(['first_name','sur_name','email_work','position','country','event_name','event_date','nature_of_business','mobile_number','company']);
          
         return view('showresult');
     }

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
+@if (Auth::check()) 
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -76,5 +76,7 @@
         </div>
     </div>
 </div>
-
+@else
+<div>You Can't register yourslef Contact With the ADMIN</div>
+@endif
 @endsection

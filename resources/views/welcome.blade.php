@@ -80,7 +80,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                   WELLCOME TO THE EXCEL MANIPULATION
+                Welcome to Mwanevents database
                 </div>
 
                
